@@ -1,2 +1,9 @@
+.env
+venv/
+__pycache__/
+.vscode/
+
+avatar/
+uploads/
+id_imgs/
 db.sqlite3
-__pycahce__/
