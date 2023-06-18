@@ -9,7 +9,10 @@ def feedback(request):
     if request.method == "POST":
         form = FeedbackForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            feedback = form.save(commit=False)
+            print("============================= request user ", request.user)
+            feedback.user = request.user
+            feedback.save()
             return redirect("dashboard")
     else:
         form = FeedbackForm(request.POST, request.FILES)
@@ -19,7 +22,7 @@ def feedback(request):
 @login_required(login_url="login")
 def dashboard(request):
     data = Feedback.objects.all()
-    return render(request, "review/dashboard.html", {"data": data})
+    return render(request, "review/dashboard.html", {"data": data, "user" : request.user.full_name})
 
 
 @login_required(login_url="login")
