@@ -3,7 +3,7 @@ from .models import Feedback
 
 
 class FeedbackForm(forms.ModelForm):
-    # pdf_file = forms.FileField()
+    pdf_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-control", "accept": ".pdf,application/pdf"}))
 
     class Meta:
         model = Feedback
@@ -12,5 +12,4 @@ class FeedbackForm(forms.ModelForm):
         widgets = {
             "woreda": forms.TextInput(attrs={"class": "form-control"}),
             "comments": forms.TextInput(attrs={"class": "form-control"}),
-            "pdf_file": forms.FileField(attrs={"class": "form-control", "accept" : ".pdf"}),
         }

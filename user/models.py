@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
-    id = models.UUIDField(default=uuid.uuid4(), primary_key=True, auto_created=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, auto_created=True)
    
     username = None
     email = models.EmailField(_('email address'), unique=True)

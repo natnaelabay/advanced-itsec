@@ -5,15 +5,15 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 import magic
 
-ext_validator = FileExtensionValidator([".pdf"])
+ext_validator = FileExtensionValidator(["pdf"])
 
 
 def validate_fil_mimetype(file):
-    accept = [".pdf"]
+    accept = ["application/pdf", "pdf", ".pdf"]
     file_mime_type = magic.from_buffer(file.read(1024), mime=True)
     if file_mime_type not in accept:
         raise ValidationError("Unsupported filetype")
-
+    return file
 
 class Feedback(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
@@ -33,6 +33,3 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.user.full_name
-
-        # a@a.com
-        # 123123qweqweasdasd
