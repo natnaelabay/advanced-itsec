@@ -2,7 +2,23 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from user.forms import UserForm, LoginForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
+
+
+from django.shortcuts import redirect
+from functools import wraps
+
+def guest_only(view_func):
+    @wraps(view_func)
+    def wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard')  # Redirect to the desired URL for authenticated users
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
+
+@guest_only
 def register(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -16,21 +32,19 @@ def register(request):
         })
     return render(request, 'user/register.html', {'form': form})
 
-
+@guest_only
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, email=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('dashboard') 
+            user = form.get_user()
+            login(request, user)
+            return redirect('dashboard') 
     else:
-        form = LoginForm()
+        form = AuthenticationForm(request)
     return render(request, 'user/login.html', {'form': form})
 
-
-def dashboard(request):
-    return render(request, 'user/dashboard.html')
+@login_required(login_url="login")
+def logout_view(request):
+    logout(request)
+    return redirect("login")

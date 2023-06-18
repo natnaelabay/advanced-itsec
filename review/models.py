@@ -3,7 +3,7 @@ from django.db import models
 from user.models import User
 
 class Feedback(models.Model):
-    id = models.UUIDField(default=uuid.uuid4(), primary_key=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     woreda = models.CharField(max_length=500)
@@ -15,3 +15,6 @@ class Feedback(models.Model):
     
     def __str__(self):
         return self.user.full_name
+
+        # a@a.com
+        # 123123qweqweasdasd

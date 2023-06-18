@@ -131,3 +131,16 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_ROOT = "media/"
+
+DEFAULT_FILE_STORAGE = 'itsec.utils.MyStorage'
+
+MEDIA_ROOT = "c://it-sec-media"
+
+# LOGIN_URL = "dashboard"
+# # LOGOUT_URL = "logout/"
+# LOGIN_REDIRECT_URL = "dashboard"
+# LOGOUT_REDIRECT_URL = "login"
+
+PARLER_ENABLE_CACHING = False 

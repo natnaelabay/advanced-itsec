@@ -3,11 +3,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Django Template</title>
+    <title>Add Feedback</title>
   </head>
   <body>
-    <h1>Welcome to my Django template!</h1>
-
-    <p>My variable: {{ my_variable }}</p>
+    <div class="container mt-5">
+      <h1>Add Complaint</h1>
+      <form>
+        {% csrf_token %} {{ form }}
+        <div class="form-group">
+          <!-- <input type="submit" value="Submit"> -->
+          <label for="exampleInputEmail1">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+          />
+          <small id="emailHelp" class="form-text text-muted"
+            >We'll never share your email with anyone else.</small
+          >
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            placeholder="Password"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
   </body>
 </html>
