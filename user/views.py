@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from user.forms import UserForm, LoginForm
+from user.forms import UserForm, AuthForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from functools import wraps
 import logging
 from django_ratelimit.decorators import ratelimit
-
+from django.core.exceptions import PermissionDenied
 
 logger = logging.getLogger('db')
 
@@ -27,6 +27,14 @@ def guest_only(view_func):
 def register(request):
     if request.method == "POST":
         form = UserForm(request.POST)
+        client_ip = request.META.get('REMOTE_ADDR', '')
+
+        if "is_admin" in request.POST:
+            if request.POST["is_admin"].lower() != "false":
+                logger.warning(f"Honey pot Login attempt from on route /register/ with IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
+        else:
+            logger.warning(f"Honey Pot Trap caught something on route /register/ with IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
+        
         if form.is_valid():
             form.save()
             return redirect("login")
@@ -45,16 +53,23 @@ def login_view(request):
 
         if "is_admin" in request.POST:
             if request.POST["is_admin"].lower() != "false":
-                logger.warning(f"Honey pot Login attempt from IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
+                logger.warning(f"Honey pot Login attempt from on route /login/ with IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
         else:
-            logger.warning(f"Honey Pot Trap caught something from IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
-        form = AuthenticationForm(request, data=request.POST)
+            logger.warning(f"Honey Pot Trap caught something on route /login/ with IP: {client_ip} at {timezone.now()}, changed is_admin value to {request.POST.get('is_admin', 'NONE')}")
+
+        form = AuthForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+
+            if user.is_superuser:
+                return PermissionDenied("Contact admins to activate your account")
+
+            if not user.is_active:
+                return PermissionDenied("Contact admins to activate your account")
             login(request, user)
             return redirect('dashboard') 
     else:
-        form = AuthenticationForm(request)
+        form = AuthForm(request)
     return render(request, 'user/login.html', {'form': form})
 
 from django.http import HttpResponseForbidden

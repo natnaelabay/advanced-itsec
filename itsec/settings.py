@@ -9,25 +9,22 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import environ
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-env = environ.Env()
+load_dotenv() 
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(env_file=BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "asdaFlyrt3ye2345tyhjklruegf,lsdf4657890-=ejdhbfvnjsadkjlfnshjaklfdnlriwlafskfjgrhf"
-)
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -176,11 +173,10 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_ROOT = "media/"
 
 DEFAULT_FILE_STORAGE = "itsec.utils.MyStorage"
 
-MEDIA_ROOT = "c://it-sec-media"
+MEDIA_ROOT = "media/"
 
 # LOGIN_URL = "dashboard"
 # # LOGOUT_URL = "logout/"
@@ -191,20 +187,20 @@ PARLER_ENABLE_CACHING = False
 
 SESSION_COOKIE_SECURE = True
 
-# SESSION_COOKIE_SECURE=True
+SESSION_COOKIE_SECURE=True
 
-# CSRF_COOKIE_AGE = 60*30
+CSRF_COOKIE_AGE = 60*30
 
 LOCKOUT_MAX_ATTEMPTS = 5
 LOCKOUT_TIME = 10
 
-
-RECAPTCHA_PUBLIC_KEY = "6Ldn8asmAAAAAPZNW6nNoiqEYkzKsu4Fl0k_-55X"
-RECAPTCHA_PRIVATE_KEY = "6Ldn8asmAAAAAD2LAgxS0uYlzv2ENjfo2KhwJKzm"
+RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY")
 NOCAPTCHA = True
 
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
 # STATIC_ROOT=os.path.join(BASE_DIR, 'static')

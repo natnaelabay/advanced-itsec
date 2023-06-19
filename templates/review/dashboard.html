@@ -100,6 +100,7 @@
             <span>Add Feedback</span>
           </a>
         </li>
+
       </ul>
     </aside>
 
@@ -139,42 +140,60 @@
                           <th scope="col">Woreda</th>
                           <th scope="col">Commen</th>
                           <th scope="col">File</th>
+                          <th scope="col">Status</th>
                           <th scope="col">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {% for item in data %}
+                        {% if data %}
+
+                          {% for item in data %}
+                          <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ item.woreda }}</td>
+                            <td>{{ item.comments|truncatechars:10 }}</td>
+                            <td>
+                              {% if item.pdf_file %}
+                              <a target="_blank" href="{{ item.pdf_file.url }}">
+                                link
+                              </a>
+                              <a target="_blank" href="{% url 'download_file'  item.id %}">
+                                testing download
+                              </a>
+                              
+                              {% endif %}
+                            </td>
+                            <td>
+                              {% if is_approved %}
+                              <span class="badge badge-secondary">Approved</span>
+                              {% else %}
+                              <span class="badge badge-secondary">Pending</span>
+                              {% endif %}
+                            
+                            </td>
+                            
+                            <td>
+                              <a
+                              type="button" 
+                              data-bs-toggle="modal" data-bs-target="#{{item.id}}"                              
+                              class="btn btn-secondary bg-white"
+                                ><i class="bi bi-eye"></i
+                              ></a>
+                                    
+                              <a
+                                class="btn btn-secondary"
+                                href="{% url 'edit-feedback' item.id %}"
+                                ><i class="bi bi-pen"></i
+                              ></a>
+
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
                         <tr>
-                          <th scope="row">{{ forloop.counter }}</th>
-                          <td>{{ item.woreda }}</td>
-                          <td>{{ item.comments|truncatechars:10 }}</td>
-                          <td>
-                            {% if item.pdf_file %}
-                            <a target="_blank" href="{{ item.pdf_file.url }}">
-                              link
-                            </a>
-                            {% endif %}
-
-                          </td>
-
-                          <td>
-                            <a
-                            type="button" 
-                            data-bs-toggle="modal" data-bs-target="#{{item.id}}"                              
-                            class="btn btn-secondary bg-white"
-                              ><i class="bi bi-eye"></i
-                            ></a>
-                                  
-                            <a
-                              class="btn btn-secondary"
-                              href="{% url 'edit-feedback' item.id %}"
-                              ><i class="bi bi-pen"></i
-                            ></a>
-                                  
-
-                          </td>
+                          <td colspan="5">No Feedbacks Yet.</td>
                         </tr>
-                        {% endfor %}
+                        {% endif %}
                       </tbody>
                     </table>
                   </div>
@@ -192,10 +211,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modal-{{ item.id }}-label">Details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title" id="{{ item.id }}-label">Details</h5>
+
           </div>
           <div class="modal-body">
             <!-- Display the details of the current row here -->
@@ -208,10 +225,11 @@
             <hr>
             <p> 
               {% if item.pdf_file %}
-              <p>File</p>
-              <a target="_blank" href="{{ item.pdf_file.url }}">
-                link
-              </a>
+              <p>File:
+                <a target="_blank" href="{{ item.pdf_file.url }}">  
+                  link
+                </a>
+              </p>
               {% endif %}
             </p>
           </div>

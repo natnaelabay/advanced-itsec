@@ -42,7 +42,14 @@ def download_feedback(request, feedback_id):
     return HttpResponseNotFound("File not found.")
 
 
+from django.shortcuts import render, redirect
+from user.views import guest_only
+
+def home_view(request):
+    return redirect("login")    
+
 urlpatterns = [
+    path('', home_view),
     path('', include('user.urls')),
     path('dashboard/', include('review.urls')),
     path('admin/', admin.site.urls),

@@ -15,6 +15,7 @@ def validate_fil_mimetype(file):
         raise ValidationError("Unsupported filetype")
     return file
 
+
 class Feedback(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
 
