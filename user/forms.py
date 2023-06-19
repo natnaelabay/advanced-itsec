@@ -20,8 +20,8 @@ class GenericEmailLoginField(forms.EmailField):
 class UserForm(UserCreationForm):
     email = GenericEmailField(required=True,widget= forms.EmailInput(attrs={'class': 'form-control'}))
     full_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password1 = forms.CharField(label="Password", required=True, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label="Confirm", required=True, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField( min_length=9, max_length=128,label="Password", required=True, widget=forms.PasswordInput(attrs={'class': 'form-control', 'auto-complete': "false"}))
+    password2 = forms.CharField(min_length=9, max_length=128,label="Confirm", required=True, widget=forms.PasswordInput(attrs={'class': 'form-control', 'auto-complete': "false"}))
     captcha = ReCaptchaField()
 
     class Meta:
@@ -35,7 +35,7 @@ class UserForm(UserCreationForm):
 
 class AuthForm(AuthenticationForm):
     username = forms.EmailField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(min_length=9, max_length=128, required=True, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(min_length=9, max_length=128, required=True, widget=forms.PasswordInput(attrs={'class': 'form-control', 'auto-complete': "false"}))
     captcha = ReCaptchaField(required=True)
 
     error_messages = {

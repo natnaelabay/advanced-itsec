@@ -64,8 +64,6 @@ def login_view(request):
             if user.is_superuser:
                 return PermissionDenied("Contact admins to activate your account")
 
-            if not user.is_active:
-                return PermissionDenied("Contact admins to activate your account")
             login(request, user)
             return redirect('dashboard') 
     else:
