@@ -11,5 +11,5 @@ class FeedbackForm(forms.ModelForm):
         fields = ["woreda", "comments", "pdf_file"]
         widgets = {
             "woreda": forms.TextInput(attrs={"class": "form-control"}),
-            "comments": forms.TextInput(attrs={"class": "form-control"}),
+            "comments": forms.Textarea(attrs={"class": "form-control"}),
         }

@@ -16,7 +16,6 @@ from pathlib import Path
 env = environ.Env()
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +25,9 @@ environ.Env.read_env(env_file=BASE_DIR)
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "asdaFlyrt3ye2345tyhjklruegf,lsdf4657890-=ejdhbfvnjsadkjlfnshjaklfdnlriwlafskfjgrhf"
+SECRET_KEY = (
+    "asdaFlyrt3ye2345tyhjklruegf,lsdf4657890-=ejdhbfvnjsadkjlfnshjaklfdnlriwlafskfjgrhf"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_db_logger",
-    'captcha',
+    "captcha",
     "axes",
     "user",
     "review",
@@ -198,6 +199,12 @@ LOCKOUT_MAX_ATTEMPTS = 5
 LOCKOUT_TIME = 10
 
 
-RECAPTCHA_PUBLIC_KEY="6Ldn8asmAAAAAPZNW6nNoiqEYkzKsu4Fl0k_-55X"
-RECAPTCHA_PRIVATE_KEY="6Ldn8asmAAAAAD2LAgxS0uYlzv2ENjfo2KhwJKzm"
-NOCAPTCHA=True
+RECAPTCHA_PUBLIC_KEY = "6Ldn8asmAAAAAPZNW6nNoiqEYkzKsu4Fl0k_-55X"
+RECAPTCHA_PRIVATE_KEY = "6Ldn8asmAAAAAD2LAgxS0uYlzv2ENjfo2KhwJKzm"
+NOCAPTCHA = True
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+# STATIC_ROOT=os.path.join(BASE_DIR, 'static')

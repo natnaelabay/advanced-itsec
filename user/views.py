@@ -57,8 +57,14 @@ def login_view(request):
         form = AuthenticationForm(request)
     return render(request, 'user/login.html', {'form': form})
 
+from django.http import HttpResponseForbidden
+
+
 @ratelimit(key='user_or_ip', rate='10/m')
 @login_required(login_url="login")
 def logout_view(request):
-    logout(request)
-    return redirect("login")
+    if request.method == "POST":
+        logout(request)
+        return redirect("login")
+    else:
+        return HttpResponseForbidden(   )

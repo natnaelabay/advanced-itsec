@@ -11,40 +11,225 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+
+    <!-- Favicons -->
+    {% load static %}
+
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon" />
+    <link
+      href="{% static 'assets/img/apple-touch-icon.png' %}"
+      rel="apple-touch-icon"
+    />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/quill/quill.snow.css' %} "
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/quill/quill.bubble.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/remixicon/remixicon.css' %}"
+      rel="stylesheet"
+    />
+    <link
+      href="{% static 'assets/vendor/simple-datatables/style.css' %}"
+      rel="stylesheet"
+    />
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
   </head>
-  <body class="container mt-5">
-    <h1>{{ user }}</h1>
-    <a href="{% url 'feedback' %}">add review</a>
-    {% if request.user.is_authenticated %}
-    <a href="{% url 'logout' %}">logout</a>
-    {% else %}
-    <a href="{% url 'login' %}">login</a>
-    {% endif %}
-    <br />
-    <h1 class="mt-5">Reviews</h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">full_name</th>
-          <th scope="col">comment</th>
-          <th scope="col">woreda</th>
-          <th scope="col">file</th>
-          <th scope="col">action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in data %}
-        <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ item.full_name }}</td>
-          <td>{{ item.woreda }}</td>
-          <td>{{ item.comments }}</td>
-          <td>{{ item.pdf_file }}</td>
-          <td><a href="{% url 'edit-feedback' item.id %}">Edit feedback</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+      <div class="d-flex align-items-center justify-content-between">
+        <a {% url 'dashboard' %} class="logo d-flex align-items-center"">
+          <img src="assets/img/logo.png" alt="" />
+          <span class="d-none d-lg-block">Dashboard</span>
+        </a>
+      </div>
+      <!-- End Logo -->
+
+      <nav class="header-nav ms-auto mr-5">
+        <form id="logout" method="POST" action="{% url 'logout'%}">
+          {% csrf_token %}
+          {{request.user.full_name}} (
+          <a type="button" data-bs-toggle="dropdown"  onclick="submitForm()"> Logout </a>
+          )
+        </form>
+
+        <div class="d-inline mw-4"></div>
+        <!-- End Profile Iamge Icon -->
+        <!-- End Profile Dropdown Items -->
+      </nav>
+      <!-- End Icons Navigation -->
+    </header>
+    <!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">
+            <i class="bi bi-grid"></i>
+            <span>Feedbacks</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'feedback' %}">
+            <i class="bi bi-grid"></i>
+            <span>Add Feedback</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main id="main" class="main">
+      <section class="section dashboard">
+        <div class="row">
+          <!-- Left side columns -->
+          <div class="col-lg-8">
+            <div class="row">
+              <!-- Recent Sales -->
+              <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                  <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"
+                      ><i class="bi bi-three-dots"></i
+                    ></a>
+                    <ul
+                      class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+                    >
+                      <li class="dropdown-header text-start">
+                        <h6>Filter</h6>
+                      </li>
+
+                      <li><a class="dropdown-item" href="#">Today</a></li>
+                      <li><a class="dropdown-item" href="#">This Month</a></li>
+                      <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                  </div>
+
+                  <div class="card-body">
+                    <h5 class="card-title">My Feedbacks</h5>
+
+                    <table class="table table-borderless datatable">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Woreda</th>
+                          <th scope="col">Commen</th>
+                          <th scope="col">File</th>
+                          <th scope="col">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in data %}
+                        <tr>
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td>{{ item.woreda }}</td>
+                          <td>{{ item.comments|truncatechars:10 }}</td>
+                          <td>
+                            {% if item.pdf_file %}
+                            <a target="_blank" href="{{ item.pdf_file.url }}">
+                              link
+                            </a>
+                            {% endif %}
+
+                          </td>
+
+                          <td>
+                            <a
+                            type="button" 
+                            data-bs-toggle="modal" data-bs-target="#{{item.id}}"                              
+                            class="btn btn-secondary bg-white"
+                              ><i class="bi bi-eye"></i
+                            ></a>
+                                  
+                            <a
+                              class="btn btn-secondary"
+                              href="{% url 'edit-feedback' item.id %}"
+                              ><i class="bi bi-pen"></i
+                            ></a>
+                                  
+
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    {% for item in data %}
+    <div 
+     class="modal fade" id="{{item.id}}" tabindex="-1" aria-labelledby="{{item.id}}" aria-hidden="true"
+     >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-{{ item.id }}-label">Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Display the details of the current row here -->
+            <p>Woreda</p>
+            <h2>{{ item.woreda }}</h2>
+            <hr>
+            
+            <p>comment:</p>
+            <p>{{ item.comments }}</p>
+            <hr>
+            <p> 
+              {% if item.pdf_file %}
+              <p>File</p>
+              <a target="_blank" href="{{ item.pdf_file.url }}">
+                link
+              </a>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    function submitForm() {
+      // Get the form element
+      var form = document.getElementById('logout');
+  
+      // Submit the form
+      form.submit();
+    }
+  </script>
   </body>
 </html>
